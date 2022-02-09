@@ -1,0 +1,73 @@
+For the lab today, we will develop a distributed lottery game.
+
+We'll start with random number generation, which can be problematic even for centralized applications.
+
+
+Part 1: Implement Rejection Sampling
+------------------------------------
+
+Download rand.js and testRand.js from the course website.
+
+When you run testRand.js, you may notice that the results are biased.  Specifically, 0-5 will be selected more frequently than 6-9.  This is problematic for our game, which should be fair to all participants.
+
+With rejection sampling we can eliminate this bias by simply discarding any numbers that exceed our range.  Implement the rejection sampling approach on the nextInt function in rand.js.
+
+NOTE: If you do part 2 of this lab, you do not need to submit part 1 to canvas.
+
+
+
+Part 2: Improve Rejection Sampling
+----------------------------------
+
+While the approach in part 1 works, it wastes a lot of random bytes.  Instead, we can expand the used range to include as much of the available range as possible without biasing the results.  (See the slides for more details).
+
+Be sure to run testRand.js to ensure that your modification does not bias the results.
+
+
+
+Part 3: Cheat the Distributed Lottery
+-------------------------------------
+
+In our lottery game, each player calculates a random number and shares it with the other parties.  Then each player independently combines the numbers to determine the winner.  See the slides for more details.
+
+Download lottery.js, player.js, and fakeNet.js from the course website.  If you completed part 2, running lottery.js should select Alice, Bob, or Charlie as the winner with even probability.
+
+(If you are curious about fakeNet.js, it is a module to simulate sending messages over the network.  It allows us to test our code without running several different processes.)
+
+Download cheater.js from the course website, which adds Trudy to the lottery.  Trudy (the intruder) is often used to refer to our generic villain in security.
+
+Instead of following the protocol, Trudy withholds her "random" number until all of the other players have announced their numbers.
+
+Update t.handleShare in cheater.js so that Trudy always broadcasts a number that will result in her being declared the winner.
+
+
+
+Part 4: Defend Against the Last Actor
+-------------------------------------
+
+The attack that you implemented in part 3 takes advantage of the last actor problem.  Since Trudy chooses her number last, she has an unfair advantage.
+
+To address this problem, we will change the protocol so that each party has to commit to their choice before revealing it.
+
+A player can commit to their value by broadcasting a hash of it.  Since cryptographic hash functions are collision resistant, Trudy cannot find multiple values that hash to the same thing.  So if she broadcasts her hash, she cannot change her random number after the fact.
+
+Instead, Trudy might try to determine the other players' random numbers from their broadcast hash values.  However, she is prevented from doing that since hash functions are not reversible...
+
+Well... there is an additional problem here.  We only have a small number of possible numbers to broadcast.  Trudy could brute-force them easily to build a reverse lookup table.
+
+So, in addition to hashing the number, the players should mix in a secret nonce.  Once everyone has committed to their random numbers, each player should reveal their random number and their secret nonce.  Anyone unable to do so is flagged as a cheater.  You can use crypto.randomBytes(48).toString('hex') to generate a nonce.
+
+
+
+Final Points
+------------
+
+Note that Trudy has a variety of attacks that she could still use to break our lottery game.  At each step of the protocol, she could fail to send messages, send additional messages, pose to be another party, etc.  She could collude with other players or try to frame them as cheaters.  Establishing consensus is a famously challenging subject.
+
+We'll return to this subject another day.  But for now, note that we have explored some of the subtleties that can come up.  Hopefully is has given you a taste of the challenges involved.
+
+
+
+Paste your rand.js (for parts 1 and 2), your cheater.js (for part 3), and your player.js (for part 4) to Canvas.
+
+
