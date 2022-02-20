@@ -57,23 +57,26 @@ function acceptCoin(coin) {
     // 1) Verify that the signature is valid.
     // 2) Gather the elements of the RIS, verifying the hashes.
     // 3) Return the RIS.
-
+    let cs = coin.toString()
     let valid = blindSignatures.verify({
         unblinded: coin.signature,
         N: N,
         E: E,
-        message: coin.coinString,
+        message: cs,
     });
 
-    let ris = []
-    let [left, right] = parseCoin(coin.coinString);
+    if (!valid) throw new Error("Invalid Signature")
 
-    for (let i = 0; i < 20; i++) {
-        let isLeft = utils.randInt(10) >= 5
+    let ris = []
+    let [left, right] = parseCoin(cs);
+
+    for (let i = 0; i < left.length; i++) {
+        let isLeft = !!utils.randInt(2)
         let ident = coin.getRis(isLeft, i)
         ris.push(ident)
         let hash = isLeft ? left[i] : right[i];
-        if (ident === hash) {
+        let h = utils.hash(ident)
+        if (h !== hash) {
             throw new Error(`Mismatched Hash!`);
         }
     }
@@ -98,18 +101,19 @@ function determineCheater(guid, ris1, ris2) {
     // Go through the RIS strings one pair at a time.
     // If the pair XORed begins with IDENT, extract coin creator ID.
     // Otherwise, declare the merchant as the cheater.
-    for (let i = 0; i < 20; i++) {
-        if (ris1 === ris2) {
-            console.log("The merchant tried to cheat")
-            return
-        }
+    if (ris1 === ris2) {
+        console.log("The merchant tried to cheat")
+        return
+    }
+    for (let i = 0; i < ris1.length; i++) {
         let xor = utils.decryptOTP({key: ris1[i], ciphertext: ris2[i], returnType: "string"})
-        if (xor.startsWith("IDENT")) {
-            console.log(xor.substring(6, 11) + " tried to cheat");
+        if (xor.startsWith(IDENT_STR)) {
+            let cheater = xor.split(':')[1]
+            console.log(cheater + " tried to cheat on coin " + guid);
             return;
         }
     }
-cons
+    cons
 
 }
 
