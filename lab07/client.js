@@ -84,7 +84,7 @@ class Client extends EventEmitter {
     updateLedger({message, signature}) {
         // Ensure the client is ready to start processing requests.
         if (this.ledger === undefined) return;
-
+        // let {from,to,amout}=message // unpack json
         //
         // ***YOUR CODE HERE***
         //
@@ -93,8 +93,8 @@ class Client extends EventEmitter {
         // 3) Verify the sender has sufficient funds
         // 4) Update the ledger
         console.log(message)
-        let varifiedSignature = this.verifySignature({message: message, name: message.from, signature: signature})
-        if (!varifiedSignature) {
+        let verifiedSignature = this.verifySignature({message: message, name: message.from, signature: signature})
+        if (!verifiedSignature) {
             console.log("invalid sig")
             this.punishCheater(message.from)
         } else if (this.clients[message.from] === "" && this.clients[message.to] === "") {
