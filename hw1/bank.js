@@ -4,7 +4,6 @@ const blindSignatures = require('blind-signatures');
 
 const {Coin, COIN_RIS_LENGTH, IDENT_STR, BANK_STR, NUM_COINS_REQUIRED} = require('./coin.js');
 const utils = require('./utils.js');
-const rand = require("../lab05/rand");
 
 // This class represents a bank issuing DigiCash-lite coins.
 class Bank {
@@ -94,7 +93,7 @@ class Bank {
         if (coinBlindedHashes.length !== NUM_COINS_REQUIRED) {
             throw new Error("wrong number of coins supplied")
         }
-        let selected = rand.nextInt(coinBlindedHashes.length);
+        let selected = utils.randInt(coinBlindedHashes.length);
         // console.log(`Bank selected ${selected}`);
         let [blindingFactors, coins] = response(selected)
 
