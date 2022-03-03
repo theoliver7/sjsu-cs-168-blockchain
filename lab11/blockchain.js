@@ -23,13 +23,17 @@ class BlockChain {
       // ***YOUR CODE HERE***
       //
       // Find a proof for the current block,
+      this.currentBlock.findProof()
       // calculate its hash,
+      let hash = this.currentBlock.hash()
       // and add the block to the `this.blocks` map
       // using the hash as the key.
+      this.blocks[hash] = this.currentBlock
       //
       // Next, make a new `this.currentBlock`, where the height is
       // one greater than the previous block and the `prevBlockHash`
       // refers to the old `this.currentBlock`.
+      this.currentBlock = new Block(this.currentBlock.blockHeight+1,hash)
     }
   }
 
@@ -43,6 +47,15 @@ class BlockChain {
     // Verify that every block (except this.currentBlock)
     // has a valid proof.  Also verify that every block's
     // hash matches what the hash is **supposed** to be.
+    for(let block in this.blocks){
+      if(!this.blocks[block].verifyProof()){
+        return false;
+      }else{
+        if(this.blocks[block].blockHeight !== 0 && this.blocks[block].prevBlockHash !== block){
+          return false;
+        }
+      }
+    }
   }
 
   // Returns the blockchain as a JSON string.
@@ -113,6 +126,11 @@ class Block {
     //
     // Search for a proof (storing it in `this.proof`).
     // Return once the verifyProof method returns true.
+    let p = -1;
+    do {
+      this.proof = p;
+      p++;
+    }while (!this.verifyProof())
   }
 
   // Returns true if the block has a valid proof.
