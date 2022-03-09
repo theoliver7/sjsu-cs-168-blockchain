@@ -47,15 +47,26 @@ class BlockChain {
     // Verify that every block (except this.currentBlock)
     // has a valid proof.  Also verify that every block's
     // hash matches what the hash is **supposed** to be.
-    for(let block in this.blocks){
-      if(!this.blocks[block].verifyProof()){
-        return false;
-      }else{
-        if(this.blocks[block].blockHeight !== 0 && this.blocks[block].prevBlockHash !== block){
-          return false;
-        }
-      }
-    }
+    if ( this.currentBlock.blockHeight===0){return true}
+    let block = this.blocks[this.currentBlock.prevBlockHash]
+    if (block.hash() !== this.currentBlock.prevBlockHash){return false}
+
+    do{
+      if(!block.verifyProof()){return false}
+      let prevHash = block.prevBlockHash
+      block = this.blocks[prevHash]
+      if(block && block.hash()!==prevHash){return false;}
+    }while(block)
+    return true;
+    // for(let block in this.blocks){
+    //   if(!this.blocks[block].verifyProof()){
+    //     return false;
+    //   }else{
+    //     if(this.blocks[block].blockHeight !== 0 && this.blocks[block].prevBlockHash !== block){
+    //       return false;
+    //     }
+    //   }
+    // }
   }
 
   // Returns the blockchain as a JSON string.
@@ -126,11 +137,13 @@ class Block {
     //
     // Search for a proof (storing it in `this.proof`).
     // Return once the verifyProof method returns true.
-    let p = -1;
-    do {
-      this.proof = p;
-      p++;
-    }while (!this.verifyProof())
+    if(this.proof !==undefined){throw new Error("Already found proof")}
+
+    this.proof = 0;
+    while(true){
+      if(this.verifyProof()){return }
+      this.proof++
+    }
   }
 
   // Returns true if the block has a valid proof.

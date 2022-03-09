@@ -33,6 +33,11 @@ module.exports = {
     //
     // **YOUR CODE HERE**
     //
+    let balance = 0;
+    for(let address in this.wallet){
+      balance += this.lastConfirmedBlock.balanceOf(this.wallet[address].address);
+    }
+    return balance;
 
   },
 
@@ -44,11 +49,13 @@ module.exports = {
   createAddress: function() {
     // Create a new keypair, derive the address from the public key,
     // add these details to the wallet, and return the address.
-
     //
     // **YOUR CODE HERE**
     //
+    this.key  = utils.generateKeypair();
+    this.address = utils.calcAddress(this.key.public);
     this.wallet.push({ address: this.address, keyPair: this.keyPair });
+    return this.address
 
   },
 
