@@ -1,0 +1,11 @@
+{
+  "name": "mnemonics",
+  "version": "1.0.0",
+  "description": "",
+  "main": "mnemonics.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Oliver Aschwanden",
+  "license": "ISC"
+}
