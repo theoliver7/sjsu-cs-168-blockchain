@@ -52,7 +52,9 @@ module.exports = class UtxoMiner extends Miner {
     //
     // **YOUR CODE HERE**
     //
-
+    if(this.address === this.lastBlock.rewardAddr  || (this.lastBlock.balances.get(this.address) !== undefined)){
+      this.address = this.createAddress();
+    }
 
     super.startNewSearch(...args);
   }

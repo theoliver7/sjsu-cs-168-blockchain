@@ -10,12 +10,12 @@ const UtxoTransaction = require('./utxo-transaction.js');
 /**
  * In Part 2, we build the UTXO model.  Note that the Block, Client, Miner,
  * and Transaction classes have been overridden.
- * 
+ *
  * In this example, Alice gives some gold to Bob, who records that amount
  * of gold in a **new** address.  Once this transaction is complete,
  * Bob should have a total of 139 gold in two different UTXOs (one for 99,
  * another for the 40 he received from Alice).
- * 
+ *
  * Bob then uses both of those UTXOs pay Charlie 110 gold.
  * Since 139 > 110 + 1 (for the transaction fee), Bob must create a new
  * 'change address' to keep the balance of 28 coins.  At the end of the
@@ -111,4 +111,3 @@ setTimeout(() => {
 
   process.exit(0);
 }, 9000);
-

@@ -27,7 +27,7 @@ class TcpNet extends FakeNet {
  * Provides a command line interface for a SpartanGold miner
  * that will actually communicate over the network.
  */
-class TcpMiner extends Miner {
+class TcpMiner extends UtxoMiner {
   static get REGISTER() { return "REGISTER"; }
 
   /**
@@ -127,8 +127,8 @@ console.clear();
 
 let startingBalances = config.genesis ? config.genesis.startingBalances : {};
 let genesis = Blockchain.makeGenesis({
-  blockClass: Block,
-  transactionClass: Transaction,
+  blockClass: UtxoBlock,
+  transactionClass: UtxoTransaction,
   powLeadingZeroes: 17,
   startingBalances: startingBalances,
 });
@@ -163,6 +163,8 @@ function readUserInput() {
   *show blocks for (d)ebugging and exit?
   *(s)ave your state?
   *e(x)it without saving?
+  *create new (a)ddress?
+  *show my (u)TXOs?
   
   Your choice: `, (answer) => {
     console.clear();
@@ -216,6 +218,13 @@ function readUserInput() {
         console.log();
         minnie.showBlockchain();
         process.exit(0);
+        break;
+      case 'a':
+        address = minnie.createAddress();
+        break;
+      case 'u':
+        minnie.showAllUtxos();
+        break;
         /* falls through */
       default:
         console.log(`Unrecognized choice: ${answer}`);
