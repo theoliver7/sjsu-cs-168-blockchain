@@ -51,8 +51,18 @@ module.exports = class CoinAgeBlock extends Block {
      */
     updateCoinAgeBalances(prevBlock) {
         this.coinAgeBalances = prevBlock ? new Map(prevBlock.coinAgeBalances) : new Map();
-        if (prevBlock === undefined) {
-            return
+        if (prevBlock) {
+            prevBlock.balances.forEach((balance, addr) => {
+                let coinAge = this.coinAgeBalances.get(addr) || 0
+                this.coinAgeBalances.set(addr, coinAge + balance)
+            })
+        }
+        let coinAge = this.coinAgeOf(this.rewardAddr)
+        this.coinAgeBalances.set(this.rewardAddr,0)
+        this.adjustedTarget = this.target
+        while(coinAge>0){
+            this.adjustedTarget = this.adjustedTarget.shiftLeft(1)
+            coinAge -= COIN_AGE_AMT
         }
         //
         // ***YOUR CODE HERE***
@@ -61,13 +71,8 @@ module.exports = class CoinAgeBlock extends Block {
         // by the amount of coins currently held.  (The amount
         // of coins currently held are available in the Map
         // prevBlock.balances).
-        for (var [address, coins] of prevBlock.balances) {
-            if (this.coinAgeBalances.get(address) === undefined) {
-                this.coinAgeBalances.set(address, coins)
-            } else {
-                this.coinAgeBalances.set(address, this.coinAgeBalances.get(address) + coins)
-            }
-        }
+
+
         //
         // Update the target according to the miner's coin age,
         // and set the miner's coin age to 0.  In order to adjust
@@ -76,12 +81,7 @@ module.exports = class CoinAgeBlock extends Block {
         //
         // The following line will double the size of this.adjustedTarget:
         //
-        let shiftLeftby = Math.floor(this.coinAgeBalances[this.rewardAddr]/500)
-        this.coinAgeBalances[this.rewardAddr] = 0
-        if (this.adjustedTarget instanceof Object) {
-            this.adjustedTarget = Object.assign(new BigInteger(), this.adjustedTarget) // issues with this.adjustedTarget being a Object
-        }
-        this.adjustedTarget = this.adjustedTarget ? this.adjustedTarget.shiftLeft(shiftLeftby) : this.target
+
     }
 
     /**

@@ -39,6 +39,7 @@ let mickey = new UtxoMiner({name: "Mickey", net: fakeNet});
 let genesis = Blockchain.makeGenesis({
   blockClass: UtxoBlock,
   transactionClass: UtxoTransaction,
+  powLeadingZeroes: 15,
   clientBalanceMap: new Map([
     [alice, 233],
     [bob, 99],
