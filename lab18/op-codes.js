@@ -43,7 +43,7 @@ let opcodes = {
         }
     },
     0x56: {
-        mnemonic: 'JUMPI', gas: 8, evaluate: (vm) => {
+        mnemonic: 'JUMP', gas: 8, evaluate: (vm) => {
             let destination = vm.stack.pop();
             vm.pc = destination
         }

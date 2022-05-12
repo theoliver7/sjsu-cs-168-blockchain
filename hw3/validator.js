@@ -5,7 +5,6 @@ const {Miner, Block} = require('spartan-gold');
 const Proposal = require('./proposal.js');
 const StakeBlockchain = require('./stake-blockchain.js');
 const Vote = require('./vote.js');
-const {address} = require("../hw2/utxo-mixin");
 
 module.exports = class Validator extends Miner {
 

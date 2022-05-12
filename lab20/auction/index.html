@@ -1,0 +1,20 @@
+<html lang="en"><head>
+    <title>Make a Bid</title>
+    <meta charset="utf-8">
+
+    <script type="text/javascript" async="">window.addEventListener("load",checkForCmp,!1);let dataframeForPingReturn={type:"FROM_MINIMAL_CONSENT"},checkForCmpCounter=0,maxTimeoutForResearch=200,maxRetryForSearch=25;function checkForCmp(){this.__cmp?this.__cmp("ping",2,sendMessage):this.__tcfapi?this.__tcfapi("ping",2,sendMessage):this.frames&&this.frames.length&&this.frames.__tcfapiLocator?this.__tcfapi("ping",2,sendMessage):checkForCmpCounter<maxRetryForSearch?(setTimeout(checkForCmp,maxTimeoutForResearch),checkForCmpCounter++):window.removeEventListener("load",checkForCmp,!1)}function sendMessage(e,t){t&&(dataframeForPingReturn.cmp=JSON.stringify(e),window.postMessage(dataframeForPingReturn,"*"),window.removeEventListener("load",checkForCmp,!1))}</script></head>
+<body>
+<h1>Make a Bid</h1>
+<font size="+2">
+    <div id="results">
+        No bids.
+    </div>
+</font>
+Bidder: <input type="text" id="bidder"> <br>
+Bid: <input type="text" id="bid"> <br>
+<input id="bidButton" type="button" value="Make bid" onclick="deployVote()">
+
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.37/dist/web3.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
+<script src="./index.js"></script>
+</body></html>
